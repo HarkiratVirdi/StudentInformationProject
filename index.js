@@ -23,7 +23,7 @@ let infoCourseUser = {
   courseCredits: "",
   marksReceived: "",
 };
-
+let infoC = infoCourseUser;
 class infoCourseUsers {
   constructor(courseCode, courseTitle, courseCredits, marksReceived) {
     this.courseCode = courseCode;
@@ -34,7 +34,6 @@ class infoCourseUsers {
 }
 
 let infoP = infoPersonalUser;
-let infoC = infoCourseUser;
 
 function askDetails() {
   let CourseID;
@@ -42,11 +41,34 @@ function askDetails() {
   askPersonalInfo();
 
   if (infoP.noOfCourses) {
-    let infoReceived;
+    let infoReceived = [];
+    let courseDetails = new infoCourseUsers();
     for (let i = 0; i < infoP.noOfCourses; i++) {
       infoReceived = askCourseInfo();
-      courseDetails[i] = new infoCourseUser(...infoReceived);
+      console.log(infoReceived);
+      console.log(infoReceived[0]);
+      console.log(infoReceived[0].courseCode);
+      console.log(infoReceived[0].courseTitle);
+      console.log(infoReceived[0].courseCredits);
+      courseDetails[i] = new infoCourseUsers(
+        infoReceived[0].courseCode,
+        infoReceived[0].courseTitle,
+        infoReceived[0].courseCredits,
+        infoReceived[0].marksReceived
+      );
+      console.log(courseDetails[i]);
+      displayInfo(courseDetails[i]);
+      console.log(courseDetails[1]);
+      console.log(courseDetails[0]);
     }
+  }
+
+  function displayInfo(details) {
+    const obj = details;
+    console.log(obj.courseCode);
+    console.log(obj.courseTitle);
+    console.log(obj.courseCredits);
+    console.log(obj.marksReceived);
   }
 
   //   CourseID = checkCourse(infoP.courseID);
@@ -77,12 +99,8 @@ function askCourseInfo() {
   infoC.courseCredits = prompt("Enter Number of Course Credits:");
   infoC.marksReceived = prompt("Enter Mark received in course:");
 
-  return arrayForStoringInfo[
-    (infoC.courseCode,
-    infoC.courseTitle,
-    infoC.courseCredits,
-    infoC.marksReceived)
-  ];
+  arrayForStoringInfo.push(infoC);
+  return arrayForStoringInfo;
 }
 
 // function searchDatabase(ID, firstName, lastName, Courses, index) {

@@ -23,7 +23,10 @@ let infoCourseUser = {
   courseCredits: "",
   marksReceived: "",
 };
+
 let infoC = infoCourseUser;
+let infoP = infoPersonalUser;
+
 class infoCourseUsers {
   constructor(courseCode, courseTitle, courseCredits, marksReceived) {
     this.courseCode = courseCode;
@@ -33,54 +36,24 @@ class infoCourseUsers {
   }
 }
 
-let infoP = infoPersonalUser;
-
 function askDetails() {
-  let CourseID;
-
   askPersonalInfo();
 
   if (infoP.noOfCourses) {
     let infoReceived = [];
-    let courseDetails = new infoCourseUsers();
+    courseDetails = new infoCourseUsers();
     for (let i = 0; i < infoP.noOfCourses; i++) {
       infoReceived = askCourseInfo();
-      console.log(infoReceived);
-      console.log(infoReceived[0]);
-      console.log(infoReceived[0].courseCode);
-      console.log(infoReceived[0].courseTitle);
-      console.log(infoReceived[0].courseCredits);
+
       courseDetails[i] = new infoCourseUsers(
         infoReceived[0].courseCode,
         infoReceived[0].courseTitle,
         infoReceived[0].courseCredits,
         infoReceived[0].marksReceived
       );
-      console.log(courseDetails[i]);
-      displayInfo(courseDetails[i]);
-      console.log(courseDetails[1]);
-      console.log(courseDetails[0]);
     }
+    displayInfo(courseDetails);
   }
-
-  function displayInfo(details) {
-    const obj = details;
-    console.log(obj.courseCode);
-    console.log(obj.courseTitle);
-    console.log(obj.courseCredits);
-    console.log(obj.marksReceived);
-  }
-
-  //   CourseID = checkCourse(infoP.courseID);
-
-  //   if (CourseID) {
-  //     searchDatabase(
-  //       infoP.studentFirstName,
-  //       infoP.studentLastName,
-  //       infoP.studentID,
-  //       infoP.noOfCourses
-  //     );
-  //   }
 }
 
 function askPersonalInfo() {
@@ -94,38 +67,89 @@ function askPersonalInfo() {
 
 function askCourseInfo() {
   let arrayForStoringInfo = [];
-  infoC.courseCode = prompt("Enter Course Code:");
-  infoC.courseTitle = prompt("Enter Course Title:");
-  infoC.courseCredits = prompt("Enter Number of Course Credits:");
+
+  do {
+    infoC.courseCode = prompt("Enter Course Code");
+  } while (!checkCourse(infoC.courseCode));
+
+  infoC.courseTitle = searchDatabase(checkIndex(infoC.courseCode))[0];
+  infoC.courseCredits = searchDatabase(checkIndex(infoC.courseCode))[1];
   infoC.marksReceived = prompt("Enter Mark received in course:");
 
   arrayForStoringInfo.push(infoC);
   return arrayForStoringInfo;
 }
 
-// function searchDatabase(ID, firstName, lastName, Courses, index) {
-//   console.log(index);
-//   const infoRegardingCourse = DATABASE.courseTitle[index];
-//   console.log(infoRegardingCourse);
-// }
+function searchDatabase(index) {
+  let infoRegardingCourse = [];
 
-// function checkCourse(courseID) {
-//   let includesCourseID;
-//   do {
-//     if (DATABASE.courseCode.includes(courseID)) {
-//       console.log("It includes");
-//       includesCourseID = true;
-//       indexForCourse = checkIndex(courseID);
-//       return indexForCourse;
-//     } else {
-//       includesCourseID = false;
-//       courseID = prompt("please enter course id:");
-//     }
-//   } while (includesCourseID !== true);
-// }
+  const infoRegardingTitle = DATABASE.courseTitle[index];
+  const infoRegardingCredits = DATABASE.courseCredit[index];
 
-// function checkIndex(courseCode) {
-//   return DATABASE.courseCode.indexOf(courseCode);
-// }
+  infoRegardingCourse.push(infoRegardingTitle, infoRegardingCredits);
+
+  return infoRegardingCourse;
+}
+
+function checkIndex(courseCode) {
+  return DATABASE.courseCode.indexOf(courseCode);
+}
+
+function checkCourse(courseID) {
+  let includesCourseID;
+  if (DATABASE.courseCode.includes(courseID)) {
+    includesCourseID = true;
+    return includesCourseID;
+  } else {
+    includesCourseID = false;
+    return includesCourseID;
+  }
+}
+
+function displayInfo(details) {
+  console.log("Thanks, displaying student transcript:");
+
+  console.log("STUDENT TRANSCRIPT");
+  console.log(infoP.studentFirstName, infoP.studentLastName);
+  console.log(infoP.studentID);
+  console.log("Semester Code:", Math.floor(Math.random() * 200000) + 10000);
+  console.log("Semester:", Math.floor(Math.random() * 8) + 1);
+
+  for (let i = 0; i < infoP.noOfCourses; i++) {
+    console.log("Course Code:", details[i].courseCode);
+    console.log("Course Title:", details[i].courseTitle);
+    console.log("Mark", details[i].marksReceived);
+    console.log("Grade:");
+  }
+
+  console.log(
+    "Student GPA:",
+    calculateGPA(totalCoursePoints(details), totalCredits(details))
+  );
+}
+
+function totalCoursePoints(Marks) {
+  let sum = 0;
+
+  for (let i = 0; i < infoP.noOfCourses; i++) {
+    sum += Marks[i].marksReceived * Marks[i].courseCredits;
+  }
+
+  return sum;
+}
+
+function totalCredits(Credit) {
+  let credits = 0;
+
+  for (let i = 0; i < infoP.noOfCourses; i++) {
+    credits += Credit[i].courseCredits;
+  }
+
+  return credits;
+}
+
+function calculateGPA(totalPoints, totalCredit) {
+  return totalPoints / totalCredit;
+}
 
 askDetails();

@@ -1,3 +1,4 @@
+//MAKING OBJECT FOR STORING FAKE DATA
 const DATABASE = {
   courseCode: ["WEB222", "WEB322", "IPC244", "JAV745", "OOP244"],
   courseTitle: [
@@ -10,6 +11,7 @@ const DATABASE = {
   courseCredit: [3, 3, 3, 3, 3],
 };
 
+//MAKING OBJECT DATA TYPE, SO THAT I CAN PASS BY REFERENCE
 let infoPersonalUser = {
   studentFirstName: "",
   studentLastName: "",
@@ -17,6 +19,7 @@ let infoPersonalUser = {
   noOfCourses: "",
 };
 
+//MAKING OBJECT DATA TYPE RELATED TO COURSE INFO ONLY
 let infoCourseUser = {
   courseCode: "",
   courseTitle: "",
@@ -24,9 +27,11 @@ let infoCourseUser = {
   marksReceived: "",
 };
 
+//SETTING OBJECTS TO SMALLER NAME FOR EASE
 let infoC = infoCourseUser;
 let infoP = infoPersonalUser;
 
+//CREATING CLASSES FOR MAKING INSTANCES
 class infoCourseUsers {
   constructor(courseCode, courseTitle, courseCredits, marksReceived) {
     this.courseCode = courseCode;
@@ -36,7 +41,8 @@ class infoCourseUsers {
   }
 }
 
-function askDetails() {
+//CREATING IIFI FOR ASKDETAILS FUNCTION
+(function askDetails() {
   askPersonalInfo();
 
   if (infoP.noOfCourses) {
@@ -54,8 +60,9 @@ function askDetails() {
     }
     displayInfo(courseDetails);
   }
-}
+})();
 
+//AKSING PERSONAL INFO AND STORING TO OBJECT INFOP
 function askPersonalInfo() {
   infoP.studentFirstName = prompt("Enter your First Name");
   infoP.studentLastName = prompt("Enter your Last Name");
@@ -65,6 +72,7 @@ function askPersonalInfo() {
   );
 }
 
+//ASKING COURSE INFO AND STORING TO OBJECT INFOC
 function askCourseInfo() {
   let arrayForStoringInfo = [];
 
@@ -80,21 +88,7 @@ function askCourseInfo() {
   return arrayForStoringInfo;
 }
 
-function searchDatabase(index) {
-  let infoRegardingCourse = [];
-
-  const infoRegardingTitle = DATABASE.courseTitle[index];
-  const infoRegardingCredits = DATABASE.courseCredit[index];
-
-  infoRegardingCourse.push(infoRegardingTitle, infoRegardingCredits);
-
-  return infoRegardingCourse;
-}
-
-function checkIndex(courseCode) {
-  return DATABASE.courseCode.indexOf(courseCode);
-}
-
+//CHECKING IF COURSE EXISTS IN DATABASE USING INCLUDES INBUILT FUNCTION AND RETURNING TRUE OR FALSE
 function checkCourse(courseID) {
   let includesCourseID;
   if (DATABASE.courseCode.includes(courseID)) {
@@ -106,6 +100,24 @@ function checkCourse(courseID) {
   }
 }
 
+//SEARCHING DATABASE AND GETTING RELATED INFO TO THE COURSE ENTERED
+function searchDatabase(index) {
+  let infoRegardingCourse = [];
+
+  const infoRegardingTitle = DATABASE.courseTitle[index];
+  const infoRegardingCredits = DATABASE.courseCredit[index];
+
+  infoRegardingCourse.push(infoRegardingTitle, infoRegardingCredits);
+
+  return infoRegardingCourse;
+}
+
+//FINDING INDEX FOR THE COURSE IN DATABASE AS THE INDEX FOR THE RELATED INFO IS SAME AS COURSE CODE
+function checkIndex(courseCode) {
+  return DATABASE.courseCode.indexOf(courseCode);
+}
+
+//DISPLAYING ALL THE INFORMATION IN CONSOLE.
 function displayInfo(details) {
   console.log("Thanks, displaying student transcript:");
   console.log("");
@@ -131,20 +143,7 @@ function displayInfo(details) {
   );
 }
 
-function totalCoursePoints(Marks) {
-  let sumGPA = 0;
-
-  for (let i = 0; i < infoP.noOfCourses; i++) {
-    sumGPA += calculateGrade(Marks[i].marksReceived)[1];
-  }
-
-  return sumGPA;
-}
-
-function calculateGPA(totalPoints, totalCredit) {
-  return totalPoints / totalCredit;
-}
-
+//CALCULATING GRADE AND GPA USING SWITCH AND STORING TO ARRAY
 function calculateGrade(marks) {
   let gradeAndGPA = [];
   let grade = "";
@@ -184,4 +183,18 @@ function calculateGrade(marks) {
   return gradeAndGPA;
 }
 
-askDetails();
+//CALCULATING GPA BY DIVIDING GPA POINTS BY TOTAL SUBJECTS
+function calculateGPA(totalPoints, totalCredit) {
+  return totalPoints / totalCredit;
+}
+
+//CALCULATE GPA POINTS FOR EACH SUBJECT AND THEN ADDING TOGETHER.
+function totalCoursePoints(Marks) {
+  let sumGPA = 0;
+
+  for (let i = 0; i < infoP.noOfCourses; i++) {
+    sumGPA += calculateGrade(Marks[i].marksReceived)[1];
+  }
+
+  return sumGPA;
+}

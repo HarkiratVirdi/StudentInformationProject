@@ -108,48 +108,80 @@ function checkCourse(courseID) {
 
 function displayInfo(details) {
   console.log("Thanks, displaying student transcript:");
-
+  console.log("");
   console.log("STUDENT TRANSCRIPT");
+  console.log("");
   console.log(infoP.studentFirstName, infoP.studentLastName);
   console.log(infoP.studentID);
   console.log("Semester Code:", Math.floor(Math.random() * 200000) + 10000);
   console.log("Semester:", Math.floor(Math.random() * 8) + 1);
+  console.log("");
 
   for (let i = 0; i < infoP.noOfCourses; i++) {
     console.log("Course Code:", details[i].courseCode);
     console.log("Course Title:", details[i].courseTitle);
     console.log("Mark", details[i].marksReceived);
-    console.log("Grade:");
+    console.log("Grade:", calculateGrade(details[i].marksReceived)[0]);
   }
 
+  console.log("");
   console.log(
     "Student GPA:",
-    calculateGPA(totalCoursePoints(details), totalCredits(details))
+    calculateGPA(totalCoursePoints(details), infoP.noOfCourses)
   );
 }
 
 function totalCoursePoints(Marks) {
-  let sum = 0;
+  let sumGPA = 0;
 
   for (let i = 0; i < infoP.noOfCourses; i++) {
-    sum += Marks[i].marksReceived * Marks[i].courseCredits;
+    sumGPA += calculateGrade(Marks[i].marksReceived)[1];
   }
 
-  return sum;
-}
-
-function totalCredits(Credit) {
-  let credits = 0;
-
-  for (let i = 0; i < infoP.noOfCourses; i++) {
-    credits += Credit[i].courseCredits;
-  }
-
-  return credits;
+  return sumGPA;
 }
 
 function calculateGPA(totalPoints, totalCredit) {
   return totalPoints / totalCredit;
+}
+
+function calculateGrade(marks) {
+  let gradeAndGPA = [];
+  let grade = "";
+  let gpa = 0;
+
+  switch (true) {
+    case marks >= 90:
+      grade = "A";
+      gpa = 4;
+      break;
+
+    case marks >= 80:
+      grade = "B";
+      gpa = 3;
+      break;
+
+    case marks >= 70:
+      grade = "C";
+      gpa = 2;
+      break;
+
+    case marks >= 60:
+      grade = "D";
+      gpa = 1;
+      break;
+
+    case marks < 60:
+      grade = "F";
+      gpa = 0;
+      break;
+
+    default:
+      break;
+  }
+
+  gradeAndGPA.push(grade, gpa);
+  return gradeAndGPA;
 }
 
 askDetails();
